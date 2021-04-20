@@ -72,8 +72,21 @@ function get_last_timestamped_dir_path(data_dir_path) {
   return date_paths[date_paths.length - 1] || null
 }
 
+async function launch_puppeteer() {
+  const browser = await puppeteer.launch({
+    headless: true,
+  });
+  const page = (await browser.pages())[0] || (await browser.newPage());
+  await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' +
+    'Chrome/61.0.3163.100 Safari/537.36'
+  );
+  return page;
+}
+
 if(typeof exports != 'undefined') {
   exports.write_file = write_file
   exports.get_last_timestamped_dir_path = get_last_timestamped_dir_path
   exports.run_loop = run_loop
+  exports.launch_puppeteer = launch_puppeteer
 }
