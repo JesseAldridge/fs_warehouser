@@ -41,9 +41,9 @@ def write_file(file_path, obj):
     os.makedirs(dir_path)
 
   text, exten = None, None
-  if isinstance(obj, str):
+  if isinstance(obj, str) or isinstance(obj, bytes):
     with open(file_path, 'w') as f:
-      f.write(obj)
+      f.write(str(obj))
   elif file_path.endswith('csv'):
     with open(file_path, 'w') as f:
       csv.writer(f).writerows(obj)
@@ -60,12 +60,15 @@ def get_last_timestamped_dir_path(data_dir_path):
   return date_paths[-1] if date_paths else None
 
 def test():
+  import requests
+
   print(get_last_timestamped_dir_path('~/fake_scraper_data'))
 
   write_file('~/fake_scraper_data/test.json', {'x': 1})
 
   def test_scraper_func(is_test, write_to_scraper_dir):
-    write_to_scraper_dir('foo.csv', [['y'], [2]])
+    resp = requests.get('https://google.com')
+    write_to_scraper_dir('google.html', resp.content)
 
   run_once(
     scraper_func=test_scraper_func,
