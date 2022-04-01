@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 
-const puppeteer = require('puppeteer')
 const shell = require('shelljs')
 const Papa = require('papaparse')
 const glob = require('glob')
@@ -70,18 +69,6 @@ function get_last_timestamped_dir_path(data_dir_path) {
   const date_paths = glob.sync(glob_path)
   date_paths.sort()
   return date_paths[date_paths.length - 1] || null
-}
-
-async function launch_puppeteer() {
-  const browser = await puppeteer.launch({
-    headless: true,
-  });
-  const page = (await browser.pages())[0] || (await browser.newPage());
-  await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' +
-    'Chrome/61.0.3163.100 Safari/537.36'
-  );
-  return page;
 }
 
 if(typeof exports != 'undefined') {
