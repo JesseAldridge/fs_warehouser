@@ -75,5 +75,4 @@ if(typeof exports != 'undefined') {
   exports.write_file = write_file
   exports.get_last_timestamped_dir_path = get_last_timestamped_dir_path
   exports.run_loop = run_loop
-  exports.launch_puppeteer = launch_puppeteer
 }

@@ -1,6 +1,6 @@
 {
   "name": "fs_warehouser",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "filesystem data warehousing",
   "main": "index.js",
   "scripts": {
