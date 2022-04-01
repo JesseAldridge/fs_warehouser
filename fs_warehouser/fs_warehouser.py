@@ -1,13 +1,9 @@
+from cmath import log
 import os, csv, glob, logging, sys, traceback, time, json
 from textwrap import indent
 from datetime import datetime
 
-import sane_logger
-
-
-logger = sane_logger.sane_logger()
-
-def run_loop(scraper_func, data_dir_path, is_test, sleep_ms):
+def run_loop(scraper_func, data_dir_path, is_test, sleep_ms, logger):
   data_dir_path = os.path.expanduser(data_dir_path)
 
   while True:
@@ -15,7 +11,7 @@ def run_loop(scraper_func, data_dir_path, is_test, sleep_ms):
     # 2016-08-15_21-11-20-492714
 
     try:
-      run_once(scraper_func, is_test, date_str, data_dir_path)
+      run_once(scraper_func, is_test, date_str, data_dir_path, logger)
     except Exception as exc:
       logger.error(f"Scraper error: {exc}, {exc.args}")
       traceback.print_exc()
@@ -24,7 +20,7 @@ def run_loop(scraper_func, data_dir_path, is_test, sleep_ms):
     logger.info(f'done scraping, sleeping for {sleep_ms / 1000 / 60 / 6:0.4f} hours')
     time.sleep(sleep_ms / 1000 or 60 * 60 * 24)
 
-def run_once(scraper_func, is_test, date_str, data_dir_path):
+def run_once(scraper_func, is_test, date_str, data_dir_path, logger):
   logger.info('running scraper')
 
   def write_to_scraper_dir(filename, obj):
@@ -60,7 +56,9 @@ def get_last_timestamped_dir_path(data_dir_path):
   return date_paths[-1] if date_paths else None
 
 def test():
-  import requests
+  import requests, sane_logger
+
+  logger = sane_logger.sane_logger()
 
   print(get_last_timestamped_dir_path('~/fake_scraper_data'))
 
@@ -75,9 +73,10 @@ def test():
     is_test=True,
     date_str='3000_01_01',
     data_dir_path='~/fake_scraper_data',
+    logger=logger,
   )
 
-  run_loop(test_scraper_func, '~/fake_scraper_data', is_test=True, sleep_ms=1000)
+  run_loop(test_scraper_func, '~/fake_scraper_data', is_test=True, sleep_ms=1000, logger=logger)
 
 if __name__ == '__main__':
   test()
