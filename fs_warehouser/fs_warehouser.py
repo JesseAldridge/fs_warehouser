@@ -21,7 +21,7 @@ def run_loop(scraper_func, data_dir_path, is_test, sleep_ms):
       traceback.print_exc()
 
     sleep_ms = sleep_ms or (24 * 60 * 60 * 1000)
-    logger.info(f'done scraping, sleeping for {sleep_ms / 1000 / 60 / 60} hours')
+    logger.info(f'done scraping, sleeping for {sleep_ms / 1000 / 60 / 6:0.4f} hours')
     time.sleep(sleep_ms / 1000 or 60 * 60 * 24)
 
 def run_once(scraper_func, is_test, date_str, data_dir_path):
@@ -41,7 +41,10 @@ def write_file(file_path, obj):
     os.makedirs(dir_path)
 
   text, exten = None, None
-  if file_path.endswith('csv'):
+  if isinstance(obj, str):
+    with open(file_path, 'w') as f:
+      f.write(obj)
+  elif file_path.endswith('csv'):
     with open(file_path, 'w') as f:
       csv.writer(f).writerows(obj)
   else:
