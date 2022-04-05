@@ -4,8 +4,7 @@ from datetime import datetime
 
 import sane_logger, robust_request
 
-def run_loop(scraper_func, data_dir_path, is_test, sleep_ms):
-  logger = sane_logger.sane_logger()
+def run_loop(scraper_func, data_dir_path, is_test, sleep_ms, logger):
   requester = robust_request.Requester(logger=logger)
   data_dir_path = os.path.expanduser(data_dir_path)
 
@@ -67,7 +66,9 @@ def test():
     resp = requester.get('https://google.com')
     write_to_scraper_dir('google.html', resp.content)
 
-  run_loop(test_scraper_func, '~/fake_scraper_data', is_test=True, sleep_ms=1000)
+  logger = sane_logger.sane_logger()
+
+  run_loop(test_scraper_func, '~/fake_scraper_data', is_test=True, sleep_ms=1000, logger=logger)
 
 if __name__ == '__main__':
   test()
