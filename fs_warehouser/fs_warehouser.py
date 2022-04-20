@@ -48,8 +48,8 @@ def write_file(file_path, obj, mode='w'):
     else:
       text = json.dumps(obj, indent=2)
       f.write(text)
-    if mode == 'a':
-      f.write('\n')
+      if mode == 'a':
+        f.write(',\n')
   return file_path
 
 def get_last_timestamped_dir_path(data_dir_path):
