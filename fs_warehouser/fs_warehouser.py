@@ -26,30 +26,30 @@ def run_loop(scraper_func, data_dir_path, is_test, sleep_ms):
 def run_once(scraper_func, is_test, date_str, data_dir_path, logger, requester):
   logger.info('running scraper')
 
-  def write_to_scraper_dir(filename, obj):
+  def write_to_scraper_dir(filename, obj, mode='w'):
     file_path = os.path.join(data_dir_path, date_str, filename)
-    file_path_with_exten = write_file(file_path, obj)
+    file_path_with_exten = write_file(file_path, obj, mode=mode)
     logger.info(f'wrote results to: {file_path_with_exten}')
 
   scraper_func(is_test, write_to_scraper_dir, logger, requester)
 
-def write_file(file_path, obj):
+def write_file(file_path, obj, mode='w'):
   file_path = os.path.expanduser(file_path)
   dir_path = os.path.dirname(file_path)
   if not os.path.exists(dir_path):
     os.makedirs(dir_path)
 
   text, exten = None, None
-  if isinstance(obj, str) or isinstance(obj, bytes):
-    with open(file_path, 'w') as f:
+  with open(file_path, mode) as f:
+    if isinstance(obj, str) or isinstance(obj, bytes):
       f.write(str(obj))
-  elif file_path.endswith('csv'):
-    with open(file_path, 'w') as f:
+    elif file_path.endswith('csv'):
       csv.writer(f).writerows(obj)
-  else:
-    text = json.dumps(obj, indent=2)
-    with open(file_path, 'w') as f:
+    else:
+      text = json.dumps(obj, indent=2)
       f.write(text)
+    if mode == 'a':
+      f.write('\n')
   return file_path
 
 def get_last_timestamped_dir_path(data_dir_path):
